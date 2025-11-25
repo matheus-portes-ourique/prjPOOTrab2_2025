@@ -8,6 +8,7 @@ import java.sql.ResultSet;
 
 import fatec.poo.model.Paciente;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 /**
  *
@@ -24,13 +25,14 @@ public class DaoPaciente {
     public void inserir(Paciente paciente){
         PreparedStatement ps = null;
         try {
-            ps = conn.prepareStatement("INSERT INTO tb_paciente values(?,?,?,?,?,?);");
+            ps = conn.prepareStatement("INSERT INTO tb_paciente values(?,?,?,?,?,?,?);");
             ps.setString(1, paciente.getNome());
             ps.setString(2, paciente.getCpf());
             ps.setString(3, paciente.getEndereco());
             ps.setString(4, paciente.getTelefone());
-            ps.setDouble(5, paciente.getAltura());
-            ps.setDouble(6, paciente.getPeso());
+            ps.setString(5, paciente.getDataNascimento());
+            ps.setDouble(6, paciente.getAltura());
+            ps.setDouble(7, paciente.getPeso());
             
             ps.execute();
         }catch(SQLException ex){
@@ -50,12 +52,16 @@ public class DaoPaciente {
             ResultSet rs = ps.executeQuery();
             
             if(rs.next()){
-                p = new Paciente(cpf, rs.getString(""))
+                DateTimeFormatter fmt = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+                
+                p = new Paciente(cpf, rs.getString("nome"), LocalDate.parse(rs.getString("dataNascimento")));
             }
             
         }catch(SQLException ex){
             System.out.println(ex.toString());
         }
+        
+        return p;
     }
     
     public void alterar(Paciente paciente){
