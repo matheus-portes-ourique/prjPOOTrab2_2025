@@ -1,9 +1,13 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package fatec.poo.control;
+
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.sql.Connection;
+import java.sql.ResultSet;
+
+import fatec.poo.model.Paciente;
+import java.time.LocalDate;
 
 /**
  *
@@ -11,4 +15,54 @@ package fatec.poo.control;
  */
 public class DaoPaciente {
     
+    private Connection conn;
+
+    public DaoPaciente(Connection conn) {
+        this.conn = conn;
+    }
+    
+    public void inserir(Paciente paciente){
+        PreparedStatement ps = null;
+        try {
+            ps = conn.prepareStatement("INSERT INTO tb_paciente values(?,?,?,?,?,?);");
+            ps.setString(1, paciente.getNome());
+            ps.setString(2, paciente.getCpf());
+            ps.setString(3, paciente.getEndereco());
+            ps.setString(4, paciente.getTelefone());
+            ps.setDouble(5, paciente.getAltura());
+            ps.setDouble(6, paciente.getPeso());
+            
+            ps.execute();
+        }catch(SQLException ex){
+            System.out.println(ex.toString());
+        }
+    }
+    
+    public Paciente consultar(String cpf){
+        Paciente p = null;
+        
+        PreparedStatement ps = null;
+        try{
+            ps = conn.prepareStatement("SELECT * from tb_paciente" + 
+                                       "where cpf = ?");
+            
+            ps.setString(1, cpf);
+            ResultSet rs = ps.executeQuery();
+            
+            if(rs.next()){
+                p = new Paciente(cpf, rs.getString(""))
+            }
+            
+        }catch(SQLException ex){
+            System.out.println(ex.toString());
+        }
+    }
+    
+    public void alterar(Paciente paciente){
+        
+    }
+    
+    public void excluir(Paciente paciente){
+        
+    }
 }
