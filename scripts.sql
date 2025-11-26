@@ -54,3 +54,13 @@ add constraint pk_exa_codigo primary key(codigo);
 alter table tb_consulta
 add constraint pk_cons_codigo primary key(codigo);
 
+--constraints (FKs)--
+
+alter table tb_consulta
+add constraint fk_medico_consulta foreign key (med_cpf) 
+references tb_medico (cpf);
+
+alter table tb_consulta
+add constraint fk_paciente_consulta foreign key (pac_cpf)
+references tb_paciente (cpf);
+

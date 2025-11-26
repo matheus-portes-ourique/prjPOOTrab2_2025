@@ -28,7 +28,8 @@ public class Paciente extends Pessoa {
     
     public void addConsulta(Consulta c){
         consultas.add(c);
-        c.setPaciente(this);
+        //SEGUNDO A CORRECAO DO DIMAS, CONSULTA NAO APONTA PARA PACIENTE
+        //c.setPaciente(this);
     }
     
     //Professor, arredondei o valor de saida do metodo para evitar decimais gigantes

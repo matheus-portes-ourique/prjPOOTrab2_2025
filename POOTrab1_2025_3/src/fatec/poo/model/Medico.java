@@ -1,4 +1,3 @@
-
 package fatec.poo.model;
 
 import java.util.ArrayList;
