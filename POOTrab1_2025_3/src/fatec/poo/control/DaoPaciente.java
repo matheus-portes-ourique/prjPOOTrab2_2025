@@ -77,9 +77,10 @@ public class DaoPaciente {
              
             ps.setDouble(1, paciente.getAltura());
             ps.setDouble(2, paciente.getPeso());
-            ps.setString(3, paciente.getCpf());
-            ps.setString(4, paciente.getEndereco());
-            ps.setString(5, paciente.getTelefone());
+            ps.setString(3, paciente.getEndereco());
+            ps.setString(4, paciente.getTelefone());
+            ps.setString(5, paciente.getCpf());
+            
             ps.execute();
         } catch(SQLException ex) {
             System.out.println(ex.toString());

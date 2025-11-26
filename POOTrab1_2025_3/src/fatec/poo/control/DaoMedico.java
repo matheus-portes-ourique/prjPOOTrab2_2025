@@ -43,18 +43,53 @@ public class DaoMedico {
         PreparedStatement ps = null;
         
         try{
-            ps = conn.prepareStatement("UPDATE tb_medico");
+            ps = conn.prepareStatement("UPDATE tb_medico SET endereco = ?,"
+                                                          + "telefone = ?,"
+                                                          + "WHERE cpf = ?;");
+            
+            ps.setString(1, medico.getEndereco());
+            ps.setString(1, medico.getTelefone());
+            
+            ps.execute();
+            
         }catch(SQLException ex){
             System.out.println(ex.toString());
         }
     }
     
-    public Medico consultar(){
-    
+    public Medico consultar(String cpf){
+        Medico m = null;
+        
+        PreparedStatement ps = null;
+        try{
+            ps = conn.prepareStatement("SELECT * FROM tb_medico"
+                                     + "WHERE cpf = ?;");
+            ps.setString(1, cpf);
+            ResultSet rs = ps.executeQuery();
+            if(rs.next()){
+                m = new Medico(cpf, rs.getString("nome"),
+                                    rs.getString("crm"), 
+                                    rs.getString("especialidade"));
+            }
+            
+        }catch(SQLException ex){
+            System.out.println(ex.toString());
+        }
+        return m;
     }
     
-    public void excluir(){
+    public void excluir(Medico medico){
+        PreparedStatement ps = null;
         
+        try{
+            ps = conn.prepareStatement("DELETE FROM tb_medico"
+                                     + "WHERE cpf = ?;");
+            
+            ps.setString(1, medico.getCpf());
+            ps.execute();
+        }catch(SQLException ex){
+            System.out.println(ex.toString());
+        }
     }
     
     
