@@ -30,7 +30,7 @@ public class Consulta {
     
     public void addMedicacao(Medicacao m){
         medicacoes.add(m);
-        m.setConsulta(this);
+        //m.setConsulta(this);
     }
 
     public Medico getMedico() {

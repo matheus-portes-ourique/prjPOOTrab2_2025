@@ -8,19 +8,19 @@ public class Medicacao {
     private String nome;
     private String dosagem;
     private int qtdeDias;
-    private Consulta consulta;
+    //private Consulta consulta;
     
     public Medicacao(String nome) {
         this.nome = nome;
     }
     
-    public Consulta getConsulta() {
+    /*public Consulta getConsulta() {
         return consulta;
-    }
+    }*/
 
-    public void setConsulta(Consulta consulta) {
+    /*(public void setConsulta(Consulta consulta) {
         this.consulta = consulta;
-    }
+    }*/
 
     public String getDosagem() {
         return dosagem;

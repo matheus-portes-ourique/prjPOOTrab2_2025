@@ -20,20 +20,22 @@ create table tb_paciente (
 create table tb_consulta (
     codigo NUMBER,
     cons_data date,
-    valor decimal(6,2)
+    valor decimal(6,2),
+    med_cpf varchar2(14)
 );
 
 create table tb_medicacao (
     nome varchar2(10),
     dosagem varchar2(10),
-    qtdDias number
+    qtdDias number,
+    cons_codigo number
 );
 
 create table tb_exame (
     codigo number,
     descricao varchar2(30),
     exa_data varchar2(20),
-    exa_gora varchar2(5),
+    exa_hora varchar2(5),
     valor decimal(6,2)
 );
 
@@ -64,3 +66,16 @@ alter table tb_consulta
 add constraint fk_paciente_consulta foreign key (pac_cpf)
 references tb_paciente (cpf);
 
+alter table tb_medicacao 
+add constraint fk_medicacao_consulta foreign key (cons_codigo)
+references tb_consulta(codigo);
+
+--procedure busca nome medico por nome da medicacao0
+--TODO: CRIAR PROCEDURE
+select m.nome 
+from tb_medico m 
+inner join tb_consulta c
+on c.med_cpf = m.cpf
+inner join TB_MEDICACAO md
+on md.cons_codigo = c.CODIGO
+where md.nome = 'dipirona';
