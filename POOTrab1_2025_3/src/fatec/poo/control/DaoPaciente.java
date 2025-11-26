@@ -46,7 +46,7 @@ public class DaoPaciente {
         PreparedStatement ps = null;
         try{
             ps = conn.prepareStatement("SELECT * from tb_paciente" + 
-                                       "where cpf = ?");
+                                       "where cpf = ?;");
             
             ps.setString(1, cpf);
             ResultSet rs = ps.executeQuery(); 
@@ -67,13 +67,14 @@ public class DaoPaciente {
     //ALTEREI APENAS OS ATRIBUTOS SETTAVEIS DA CLASSE PACIENTE/PESSOA
     public void alterar(Paciente paciente){
         PreparedStatement ps = null;
-        String sql = "UPDATE tb_paciente SET altura = ?, " 
-                   + "peso = ?, "
-                   + "endereco = ?, "
-                   + "telefone = ?, "
-                   + "WHERE cpf = ?;";
+       
         try{
-            ps = conn.prepareStatement(sql);
+             ps = conn.prepareStatement("UPDATE tb_paciente SET altura = ?, " 
+                                      + "peso = ?, "
+                                      + "endereco = ?, "
+                                      + "telefone = ?, "
+                                      + "WHERE cpf = ?;");
+             
             ps.setDouble(1, paciente.getAltura());
             ps.setDouble(2, paciente.getPeso());
             ps.setString(3, paciente.getCpf());
