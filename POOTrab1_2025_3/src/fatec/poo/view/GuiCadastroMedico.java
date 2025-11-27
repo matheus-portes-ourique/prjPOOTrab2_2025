@@ -5,12 +5,19 @@
  */
 package fatec.poo.view;
 
+import fatec.poo.control.DaoMedico;
+import fatec.poo.model.Medico;
+import fatec.poo.control.*;
+
 /**
  *
  * @author matheus
  */
 public class GuiCadastroMedico extends javax.swing.JFrame {
 
+    private Conexao conexao = null;
+    private Medico medico = null;
+    private DaoMedico daoMedico = null;
     /**
      * Creates new form GuiCadastroMedico
      */
@@ -47,6 +54,11 @@ public class GuiCadastroMedico extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Cadastro Médico");
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowOpened(java.awt.event.WindowEvent evt) {
+                formWindowOpened(evt);
+            }
+        });
 
         lblCPF.setText("CPF");
 
@@ -68,6 +80,11 @@ public class GuiCadastroMedico extends javax.swing.JFrame {
 
         btnConsultar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/fatec/poo/view/icon/pesq.png"))); // NOI18N
         btnConsultar.setText("Consultar");
+        btnConsultar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnConsultarActionPerformed(evt);
+            }
+        });
 
         btnInserir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/fatec/poo/view/icon/add.png"))); // NOI18N
         btnInserir.setText("Inserir");
@@ -170,6 +187,38 @@ public class GuiCadastroMedico extends javax.swing.JFrame {
     private void txtNomeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNomeActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtNomeActionPerformed
+
+    private void btnConsultarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConsultarActionPerformed
+        // IMPLEMENTADA FUNCIONALIDADE DE CONSULTA PARA GUI MEDICO
+        medico = null;
+        String cpf = txtCPF.getText();
+        cpf = cpf.replace("-", "");
+        cpf = cpf.replace(".", "");
+        medico = daoMedico.consultar(cpf);
+        
+        if (medico == null){
+            btnConsultar.setEnabled(false);
+            btnInserir.setEnabled(true);
+            btnAlterar.setEnabled(false);
+            btnExcluir.setEnabled(false);
+        }
+        else {
+            txtCPF.setText(medico.getCpf());
+            txtCRM.setText(medico.getCrm());
+            txtEndereço.setText(medico.getEndereco());
+            txtEspecialidade.setText(medico.getEspecialidade());
+            txtTelefone.setText(medico.getTelefone());
+            txtNome.setText(medico.getNome());
+        }
+    }//GEN-LAST:event_btnConsultarActionPerformed
+
+    private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
+        // CONEXAO ESTABELECIDA ASSIM QUE A JANELA 'MEDICO' FOR ABERTA
+        conexao = new Conexao("BD2411012","BD2411012");
+        conexao.setDriver("oracle.jdbc.driver.OracleDriver");
+        conexao.setConnectionString("jdbc:oracle:thin:@apolo:1521:xe");
+        daoMedico = new DaoMedico(conexao.conectar());
+    }//GEN-LAST:event_formWindowOpened
 
     /**
      * @param args the command line arguments
