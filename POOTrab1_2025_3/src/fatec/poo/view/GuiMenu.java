@@ -45,6 +45,11 @@ public class GuiMenu extends javax.swing.JFrame {
 
         jMenuItemMédico.setText("Medico");
         jMenuItemMédico.setName("jMenuItemMédico"); // NOI18N
+        jMenuItemMédico.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItemMédicoActionPerformed(evt);
+            }
+        });
         jMenuItemCadastro.add(jMenuItemMédico);
 
         jMenuItemPaciente.setText("Paciente");
@@ -86,6 +91,10 @@ public class GuiMenu extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jMenuItemMédicoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemMédicoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jMenuItemMédicoActionPerformed
 
     /**
      * @param args the command line arguments

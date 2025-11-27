@@ -5,12 +5,22 @@
  */
 package fatec.poo.view;
 
+import fatec.poo.control.Conexao;
+import fatec.poo.control.DaoPaciente;
+import fatec.poo.model.Paciente;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.HashSet;
+
 /**
  *
  * @author matheus
  */
 public class GuiCadastroPaciente extends javax.swing.JFrame {
 
+    private Conexao conexao = null;
+    private Paciente paciente = null;
+    private DaoPaciente daoPaciente = null;
     /**
      * Creates new form GuiCadastroPaciente
      */
@@ -27,9 +37,8 @@ public class GuiCadastroPaciente extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        txtCPF = new javax.swing.JTextField();
         txtNome = new javax.swing.JTextField();
-        txtEndereço = new javax.swing.JTextField();
+        txtEndereco = new javax.swing.JTextField();
         txtTelefone = new javax.swing.JTextField();
         txtDataNascimento = new javax.swing.JTextField();
         lblAltura = new javax.swing.JLabel();
@@ -46,12 +55,25 @@ public class GuiCadastroPaciente extends javax.swing.JFrame {
         btnAlterar = new javax.swing.JButton();
         btnExcluir = new javax.swing.JButton();
         btnSair = new javax.swing.JButton();
+        formttTextCpf = new javax.swing.JFormattedTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowOpened(java.awt.event.WindowEvent evt) {
+                formWindowOpened(evt);
+            }
+        });
 
         txtNome.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtNomeActionPerformed(evt);
+            }
+        });
+
+        txtEndereco.setName(""); // NOI18N
+        txtEndereco.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtEnderecoActionPerformed(evt);
             }
         });
 
@@ -71,9 +93,19 @@ public class GuiCadastroPaciente extends javax.swing.JFrame {
 
         btnConsultar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/fatec/poo/view/icon/pesq.png"))); // NOI18N
         btnConsultar.setText("Consultar");
+        btnConsultar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnConsultarActionPerformed(evt);
+            }
+        });
 
         btnInserir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/fatec/poo/view/icon/add.png"))); // NOI18N
         btnInserir.setText("Inserir");
+        btnInserir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnInserirActionPerformed(evt);
+            }
+        });
 
         btnAlterar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/fatec/poo/view/icon/Alterar.png"))); // NOI18N
         btnAlterar.setText("Alterar");
@@ -83,6 +115,9 @@ public class GuiCadastroPaciente extends javax.swing.JFrame {
 
         btnSair.setIcon(new javax.swing.ImageIcon(getClass().getResource("/fatec/poo/view/icon/exit.png"))); // NOI18N
         btnSair.setText("Sair");
+
+        formttTextCpf.setText(" . . -");
+        formttTextCpf.setName(""); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -98,18 +133,8 @@ public class GuiCadastroPaciente extends javax.swing.JFrame {
                         .addGap(57, 57, 57)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(txtNome, javax.swing.GroupLayout.PREFERRED_SIZE, 408, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtCPF, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(formttTextCpf, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addComponent(lblEndereco)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lblDataNascimento)
-                            .addComponent(lblAltura)
-                            .addComponent(lblPeso))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(txtDataNascimento, javax.swing.GroupLayout.DEFAULT_SIZE, 110, Short.MAX_VALUE)
-                            .addComponent(txtAltura)
-                            .addComponent(txtPeso)))
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                         .addGroup(layout.createSequentialGroup()
                             .addComponent(btnConsultar)
@@ -125,10 +150,20 @@ public class GuiCadastroPaciente extends javax.swing.JFrame {
                             .addComponent(lblTelefone)
                             .addGap(42, 42, 42)
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(txtEndereço, javax.swing.GroupLayout.PREFERRED_SIZE, 408, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(txtEndereco, javax.swing.GroupLayout.PREFERRED_SIZE, 408, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGroup(layout.createSequentialGroup()
                                     .addComponent(txtTelefone)
-                                    .addGap(297, 297, 297))))))
+                                    .addGap(297, 297, 297)))))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(lblDataNascimento)
+                            .addComponent(lblAltura)
+                            .addComponent(lblPeso))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(txtDataNascimento, javax.swing.GroupLayout.DEFAULT_SIZE, 110, Short.MAX_VALUE)
+                            .addComponent(txtAltura)
+                            .addComponent(txtPeso))))
                 .addContainerGap(14, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -137,7 +172,7 @@ public class GuiCadastroPaciente extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblCPF)
-                    .addComponent(txtCPF, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(formttTextCpf, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblNome)
@@ -145,7 +180,7 @@ public class GuiCadastroPaciente extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblEndereco)
-                    .addComponent(txtEndereço, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtEndereco, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(txtTelefone, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -178,6 +213,81 @@ public class GuiCadastroPaciente extends javax.swing.JFrame {
     private void txtNomeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNomeActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtNomeActionPerformed
+
+    private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
+        // TODO add your handling code here:
+        conexao = new Conexao("BD2411012","BD2411012");
+        conexao.setDriver("oracle.jdbc.driver.OracleDriver");
+        conexao.setConnectionString("jdbc:oracle:thin:@apolo:1521:xe");
+        daoPaciente = new DaoPaciente(conexao.conectar());
+    }//GEN-LAST:event_formWindowOpened
+
+    private void btnConsultarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConsultarActionPerformed
+        // TODO add your handling code here:
+        paciente = null;
+        String cpf = formttTextCpf.getText();
+        cpf = cpf.replace("-", "");
+        cpf = cpf.replace(".", "");
+        paciente = daoPaciente.consultar(cpf);
+        
+        if(paciente == null) {
+            btnConsultar.setEnabled(false);
+            btnInserir.setEnabled(true);
+            btnAlterar.setEnabled(false);
+            btnExcluir.setEnabled(false);
+        }
+        else {
+            formttTextCpf.setText(paciente.getCpf());
+            txtNome.setText(paciente.getNome());
+            txtDataNascimento.setText(paciente.getDataNascimento());
+            txtAltura.setText(String.valueOf(paciente.getAltura()));
+            txtPeso.setText(String.valueOf(paciente.getPeso()));
+            txtEndereco.setText(paciente.getEndereco());
+            txtTelefone.setText(paciente.getTelefone());
+            
+            btnConsultar.setEnabled(false);
+            btnInserir.setEnabled(false);
+            btnAlterar.setEnabled(true);
+            btnExcluir.setEnabled(true);
+        }
+    }//GEN-LAST:event_btnConsultarActionPerformed
+
+    private void txtEnderecoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtEnderecoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtEnderecoActionPerformed
+
+    private void btnInserirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnInserirActionPerformed
+        // TODO add your handling code here:
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        String cpf = formttTextCpf.getText().replace("-", "");
+        cpf = cpf.replace(".", "");
+        Double altura = Double.valueOf(txtAltura.getText());
+        Double peso = Double.valueOf(txtPeso.getText());
+        LocalDate dataNasc = LocalDate.parse(txtDataNascimento.getText(), dtf);
+        
+        //CADASTRO DE PACIENTE DE FATOÓ
+        paciente = new Paciente(cpf, txtNome.getText(), dataNasc);
+        paciente.setEndereco(txtEndereco.getText());
+        paciente.setTelefone(txtTelefone.getText());
+        paciente.setAltura(altura);
+        paciente.setPeso(peso);
+        daoPaciente.inserir(paciente);
+        
+        //LIMPANDO OS CAMPOS APOS CADASTRO DE PACIENTE
+        formttTextCpf.setText("");
+        txtAltura.setText("");
+        txtPeso.setText("");
+        txtDataNascimento.setText("");
+        txtNome.setText("");
+        txtEndereco.setText("");
+        txtTelefone.setText("");
+        
+        //SETTANDO ESTADO DOS BOTOES
+        btnConsultar.setEnabled(true);
+        btnInserir.setEnabled(false);
+        btnAlterar.setEnabled(false);
+        btnExcluir.setEnabled(false); 
+    }//GEN-LAST:event_btnInserirActionPerformed
 
     /**
      * @param args the command line arguments
@@ -220,6 +330,7 @@ public class GuiCadastroPaciente extends javax.swing.JFrame {
     private javax.swing.JButton btnExcluir;
     private javax.swing.JButton btnInserir;
     private javax.swing.JButton btnSair;
+    private javax.swing.JFormattedTextField formttTextCpf;
     private javax.swing.JLabel lblAltura;
     private javax.swing.JLabel lblCPF;
     private javax.swing.JLabel lblDataNascimento;
@@ -228,9 +339,8 @@ public class GuiCadastroPaciente extends javax.swing.JFrame {
     private javax.swing.JLabel lblPeso;
     private javax.swing.JLabel lblTelefone;
     private javax.swing.JTextField txtAltura;
-    private javax.swing.JTextField txtCPF;
     private javax.swing.JTextField txtDataNascimento;
-    private javax.swing.JTextField txtEndereço;
+    private javax.swing.JTextField txtEndereco;
     private javax.swing.JTextField txtNome;
     private javax.swing.JTextField txtPeso;
     private javax.swing.JTextField txtTelefone;

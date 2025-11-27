@@ -7,7 +7,7 @@ package fatec.poo.view;
 
 import fatec.poo.control.DaoMedico;
 import fatec.poo.model.Medico;
-import fatec.poo.control.*;
+import fatec.poo.control.Conexao;
 
 /**
  *
