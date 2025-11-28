@@ -247,6 +247,11 @@ public class GuiCadastroMedico extends javax.swing.JFrame {
                 txtCRM.setText("");
                 txtEspecialidade.setText("");
                 
+                txtCPF.setEnabled(true);
+                txtCRM.setEnabled(false);                
+                txtEndereco.setEnabled(false);
+                txtTelefone.setEnabled(false);
+                
                 btnConsultar.setEnabled(true);
                 btnInserir.setEnabled(true);
                 btnAlterar.setEnabled(false);

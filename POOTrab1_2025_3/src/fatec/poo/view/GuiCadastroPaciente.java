@@ -8,9 +8,11 @@ package fatec.poo.view;
 import fatec.poo.control.Conexao;
 import fatec.poo.control.DaoPaciente;
 import fatec.poo.model.Paciente;
+import fatec.poo.utility.CpfTreater;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.HashSet;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -112,6 +114,11 @@ public class GuiCadastroPaciente extends javax.swing.JFrame {
 
         btnExcluir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/fatec/poo/view/icon/Eraser.png"))); // NOI18N
         btnExcluir.setText("Excluir");
+        btnExcluir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnExcluirActionPerformed(evt);
+            }
+        });
 
         btnSair.setIcon(new javax.swing.ImageIcon(getClass().getResource("/fatec/poo/view/icon/exit.png"))); // NOI18N
         btnSair.setText("Sair");
@@ -204,7 +211,7 @@ public class GuiCadastroPaciente extends javax.swing.JFrame {
                     .addComponent(btnAlterar)
                     .addComponent(btnInserir)
                     .addComponent(btnConsultar))
-                .addContainerGap(13, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
@@ -259,11 +266,12 @@ public class GuiCadastroPaciente extends javax.swing.JFrame {
     private void btnInserirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnInserirActionPerformed
         // TODO add your handling code here:
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        String cpf = formttTextCpf.getText().replace("-", "");
-        cpf = cpf.replace(".", "");
         Double altura = Double.valueOf(txtAltura.getText());
         Double peso = Double.valueOf(txtPeso.getText());
         LocalDate dataNasc = LocalDate.parse(txtDataNascimento.getText(), dtf);
+        
+        String cpf = CpfTreater.toFormat(formttTextCpf.getText());
+        //TODO: VERIFICAR SE O CPF EH VALIDO PARA CADASTRO
         
         //CADASTRO DE PACIENTE DE FATOÓ
         paciente = new Paciente(cpf, txtNome.getText(), dataNasc);
@@ -282,12 +290,38 @@ public class GuiCadastroPaciente extends javax.swing.JFrame {
         txtEndereco.setText("");
         txtTelefone.setText("");
         
+        formttTextCpf.setEnabled(true);
+        txtAltura.setEnabled(false);
+        txtPeso.setEnabled(false);
+        txtDataNascimento.setEnabled(false);
+        txtEndereco.setEnabled(false);
+        txtTelefone.setEnabled(false);
+       
         //SETTANDO ESTADO DOS BOTOES
         btnConsultar.setEnabled(true);
         btnInserir.setEnabled(false);
         btnAlterar.setEnabled(false);
         btnExcluir.setEnabled(false); 
     }//GEN-LAST:event_btnInserirActionPerformed
+
+    private void btnExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExcluirActionPerformed
+        // TODO add your handling code here:
+         if (JOptionPane.showConfirmDialog(null, "Confirma Exclusão?") == 0) {
+            daoPaciente.excluir(paciente);
+        }
+        btnConsultar.setEnabled(true);
+        btnInserir.setEnabled(true);
+        btnAlterar.setEnabled(false);
+        btnExcluir.setEnabled(false);
+            
+        formttTextCpf.setText(null);
+        txtNome.setText("");
+        txtEndereco.setText("");
+        txtTelefone.setText("");
+        txtAltura.setText("");
+        txtPeso.setText("");
+ 
+    }//GEN-LAST:event_btnExcluirActionPerformed
 
     /**
      * @param args the command line arguments
