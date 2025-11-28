@@ -8,6 +8,8 @@ package fatec.poo.view;
 import fatec.poo.control.DaoMedico;
 import fatec.poo.model.Medico;
 import fatec.poo.control.Conexao;
+import fatec.poo.utility.CpfTreater;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -41,7 +43,7 @@ public class GuiCadastroMedico extends javax.swing.JFrame {
         lblCRM = new javax.swing.JLabel();
         txtCPF = new javax.swing.JTextField();
         txtNome = new javax.swing.JTextField();
-        txtEndereço = new javax.swing.JTextField();
+        txtEndereco = new javax.swing.JTextField();
         txtTelefone = new javax.swing.JTextField();
         txtCRM = new javax.swing.JTextField();
         lblEspecialidade = new javax.swing.JLabel();
@@ -88,12 +90,22 @@ public class GuiCadastroMedico extends javax.swing.JFrame {
 
         btnInserir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/fatec/poo/view/icon/add.png"))); // NOI18N
         btnInserir.setText("Inserir");
+        btnInserir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnInserirActionPerformed(evt);
+            }
+        });
 
         btnAlterar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/fatec/poo/view/icon/Alterar.png"))); // NOI18N
         btnAlterar.setText("Alterar");
 
         btnExcluir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/fatec/poo/view/icon/Eraser.png"))); // NOI18N
         btnExcluir.setText("Excluir");
+        btnExcluir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnExcluirActionPerformed(evt);
+            }
+        });
 
         btnSair.setIcon(new javax.swing.ImageIcon(getClass().getResource("/fatec/poo/view/icon/exit.png"))); // NOI18N
         btnSair.setText("Sair");
@@ -122,7 +134,7 @@ public class GuiCadastroMedico extends javax.swing.JFrame {
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(txtTelefone, javax.swing.GroupLayout.PREFERRED_SIZE, 174, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(236, 236, 236))
-                            .addComponent(txtEndereço)))
+                            .addComponent(txtEndereco)))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(lblNome)
@@ -161,7 +173,7 @@ public class GuiCadastroMedico extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(lblEndereço)
-                            .addComponent(txtEndereço, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(txtEndereco, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(txtTelefone, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(lblTelefone))
@@ -191,9 +203,7 @@ public class GuiCadastroMedico extends javax.swing.JFrame {
     private void btnConsultarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConsultarActionPerformed
         // IMPLEMENTADA FUNCIONALIDADE DE CONSULTA PARA GUI MEDICO
         medico = null;
-        String cpf = txtCPF.getText();
-        cpf = cpf.replace("-", "");
-        cpf = cpf.replace(".", "");
+        String cpf = CpfTreater.toFormat(txtCPF.getText());
         medico = daoMedico.consultar(cpf);
         
         if (medico == null){
@@ -205,7 +215,7 @@ public class GuiCadastroMedico extends javax.swing.JFrame {
         else {
             txtCPF.setText(medico.getCpf());
             txtCRM.setText(medico.getCrm());
-            txtEndereço.setText(medico.getEndereco());
+            txtEndereco.setText(medico.getEndereco());
             txtEspecialidade.setText(medico.getEspecialidade());
             txtTelefone.setText(medico.getTelefone());
             txtNome.setText(medico.getNome());
@@ -219,6 +229,60 @@ public class GuiCadastroMedico extends javax.swing.JFrame {
         conexao.setConnectionString("jdbc:oracle:thin:@apolo:1521:xe");
         daoMedico = new DaoMedico(conexao.conectar());
     }//GEN-LAST:event_formWindowOpened
+
+    private void btnInserirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnInserirActionPerformed
+        String cpf = CpfTreater.toFormat(txtCPF.getText());
+        
+        if(CpfTreater.toValidate(cpf)) {
+        Medico medico = new Medico(cpf, txtNome.getText(), txtCRM.getText(), txtEspecialidade.getText());
+        medico.setEndereco(txtEndereco.getText());
+        medico.setTelefone(txtTelefone.getText());
+            if(daoMedico.consultar(medico.getCpf()) == null) {
+                daoMedico.inserir(medico);
+                
+                txtCPF.setText("");
+                txtNome.setText("");
+                txtEndereco.setText("");
+                txtTelefone.setText("");
+                txtCRM.setText("");
+                txtEspecialidade.setText("");
+                
+                btnConsultar.setEnabled(true);
+                btnInserir.setEnabled(true);
+                btnAlterar.setEnabled(false);
+                btnExcluir.setEnabled(false);
+            }
+            else {
+                txtCPF.setText("CPF já cadastrado!");
+                btnConsultar.setEnabled(true);
+                btnInserir.setEnabled(false);
+                btnAlterar.setEnabled(true);
+                btnExcluir.setEnabled(false); 
+            }
+        
+        }
+        else {
+            txtCPF.setText("CPF inválido!");
+        }
+    }//GEN-LAST:event_btnInserirActionPerformed
+
+    private void btnExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExcluirActionPerformed
+        // TODO add your handling code here:
+        if (JOptionPane.showConfirmDialog(null, "Confirma Exclusão?") == 0) {
+            daoMedico.excluir(medico);
+        }
+        btnConsultar.setEnabled(true);
+        btnInserir.setEnabled(true);
+        btnAlterar.setEnabled(false);
+        btnExcluir.setEnabled(false);
+            
+        txtCPF.setText("");
+        txtNome.setText("");
+        txtEndereco.setText("");
+        txtTelefone.setText("");
+        txtCRM.setText("");
+        txtEspecialidade.setText("");
+    }//GEN-LAST:event_btnExcluirActionPerformed
 
     /**
      * @param args the command line arguments
@@ -269,7 +333,7 @@ public class GuiCadastroMedico extends javax.swing.JFrame {
     private javax.swing.JLabel lblTelefone;
     private javax.swing.JTextField txtCPF;
     private javax.swing.JTextField txtCRM;
-    private javax.swing.JTextField txtEndereço;
+    private javax.swing.JTextField txtEndereco;
     private javax.swing.JTextField txtEspecialidade;
     private javax.swing.JTextField txtNome;
     private javax.swing.JTextField txtTelefone;
