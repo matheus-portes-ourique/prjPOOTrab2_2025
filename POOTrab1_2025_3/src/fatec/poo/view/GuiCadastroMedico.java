@@ -98,6 +98,11 @@ public class GuiCadastroMedico extends javax.swing.JFrame {
 
         btnAlterar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/fatec/poo/view/icon/Alterar.png"))); // NOI18N
         btnAlterar.setText("Alterar");
+        btnAlterar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAlterarActionPerformed(evt);
+            }
+        });
 
         btnExcluir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/fatec/poo/view/icon/Eraser.png"))); // NOI18N
         btnExcluir.setText("Excluir");
@@ -207,7 +212,7 @@ public class GuiCadastroMedico extends javax.swing.JFrame {
         medico = daoMedico.consultar(cpf);
         
         if (medico == null){
-            btnConsultar.setEnabled(false);
+            btnConsultar.setEnabled(true);
             btnInserir.setEnabled(true);
             btnAlterar.setEnabled(false);
             btnExcluir.setEnabled(false);
@@ -219,14 +224,20 @@ public class GuiCadastroMedico extends javax.swing.JFrame {
             txtEspecialidade.setText(medico.getEspecialidade());
             txtTelefone.setText(medico.getTelefone());
             txtNome.setText(medico.getNome());
+            
+            btnConsultar.setEnabled(true);
+            btnInserir.setEnabled(false);
+            btnAlterar.setEnabled(true);
+            btnExcluir.setEnabled(true);
         }
     }//GEN-LAST:event_btnConsultarActionPerformed
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
         // CONEXAO ESTABELECIDA ASSIM QUE A JANELA 'MEDICO' FOR ABERTA
-        conexao = new Conexao("BD2411012","BD2411012");
+        //TEM QUE MUDAR OS DADOS CONFORME AS CONFIGURAÇÕES DO SEU BANCO DE DADOS
+        conexao = new Conexao("<user>","<password>");
         conexao.setDriver("oracle.jdbc.driver.OracleDriver");
-        conexao.setConnectionString("jdbc:oracle:thin:@apolo:1521:xe");
+        conexao.setConnectionString("jdbc:oracle:thin:@<host>:<porta>:xe");
         daoMedico = new DaoMedico(conexao.conectar());
     }//GEN-LAST:event_formWindowOpened
 
@@ -248,9 +259,9 @@ public class GuiCadastroMedico extends javax.swing.JFrame {
                 txtEspecialidade.setText("");
                 
                 txtCPF.setEnabled(true);
-                txtCRM.setEnabled(false);                
-                txtEndereco.setEnabled(false);
-                txtTelefone.setEnabled(false);
+                txtCRM.setEnabled(true);                
+                txtEndereco.setEnabled(true);
+                txtTelefone.setEnabled(true);
                 
                 btnConsultar.setEnabled(true);
                 btnInserir.setEnabled(true);
@@ -260,7 +271,7 @@ public class GuiCadastroMedico extends javax.swing.JFrame {
             else {
                 txtCPF.setText("CPF já cadastrado!");
                 btnConsultar.setEnabled(true);
-                btnInserir.setEnabled(false);
+                btnInserir.setEnabled(true);
                 btnAlterar.setEnabled(true);
                 btnExcluir.setEnabled(false); 
             }
@@ -288,6 +299,28 @@ public class GuiCadastroMedico extends javax.swing.JFrame {
         txtCRM.setText("");
         txtEspecialidade.setText("");
     }//GEN-LAST:event_btnExcluirActionPerformed
+
+    private void btnAlterarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAlterarActionPerformed
+        // TODO add your handling code here:
+        if (JOptionPane.showConfirmDialog(null, "Confirma Alteração?")== 0) {
+           medico = new Medico(txtCPF.getText(),txtNome.getText(), txtCRM.getText(), txtEspecialidade.getText());
+           medico.setEndereco(txtEndereco.getText());
+           medico.setTelefone(txtTelefone.getText());
+           daoMedico.alterar(medico);
+        }
+        
+        btnConsultar.setEnabled(true);
+        btnInserir.setEnabled(true);
+        btnAlterar.setEnabled(false);
+        btnExcluir.setEnabled(false);
+        
+        txtCPF.setText("");
+        txtNome.setText("");
+        txtEndereco.setText("");
+        txtTelefone.setText("");
+        txtCRM.setText("");
+        txtEspecialidade.setText("");
+    }//GEN-LAST:event_btnAlterarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -319,7 +352,7 @@ public class GuiCadastroMedico extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new GuiCadastroMedico().setVisible(true);
+               // new GuiCadastroMedico(DaoMedico daoMedico).setVisible(true);
             }
         });
     }

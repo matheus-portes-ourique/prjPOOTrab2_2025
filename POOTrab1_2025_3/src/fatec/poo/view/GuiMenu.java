@@ -94,6 +94,10 @@ public class GuiMenu extends javax.swing.JFrame {
 
     private void jMenuItemMédicoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemMédicoActionPerformed
         // TODO add your handling code here:
+        GuiCadastroMedico guiMedico = new GuiCadastroMedico();
+        guiMedico.setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        guiMedico.setVisible(true);
+        
     }//GEN-LAST:event_jMenuItemMédicoActionPerformed
 
     /**

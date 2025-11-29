@@ -223,9 +223,9 @@ public class GuiCadastroPaciente extends javax.swing.JFrame {
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
         // TODO add your handling code here:
-        conexao = new Conexao("BD2411012","BD2411012");
+        conexao = new Conexao("system","16071995");
         conexao.setDriver("oracle.jdbc.driver.OracleDriver");
-        conexao.setConnectionString("jdbc:oracle:thin:@apolo:1521:xe");
+        conexao.setConnectionString("jdbc:oracle:thin:@localhost:1521:xe");
         daoPaciente = new DaoPaciente(conexao.conectar());
     }//GEN-LAST:event_formWindowOpened
 
