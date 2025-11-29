@@ -25,7 +25,7 @@ public class DaoPaciente {
     public void inserir(Paciente paciente){
         PreparedStatement ps = null;
         try {
-            ps = conn.prepareStatement("INSERT INTO tb_paciente values(?,?,?,?,?,?,?);");
+            ps = conn.prepareStatement("INSERT INTO tb_paciente values(?,?,?,?,?,?,?)");
             ps.setString(1, paciente.getNome());
             ps.setString(2, paciente.getCpf());
             ps.setString(3, paciente.getEndereco());
@@ -46,13 +46,15 @@ public class DaoPaciente {
         PreparedStatement ps = null;
         try{
             ps = conn.prepareStatement("SELECT * from tb_paciente" + 
-                                       "where cpf = ?;");
+                                       " where cpf = ?");
             
             ps.setString(1, cpf);
             ResultSet rs = ps.executeQuery(); 
             if(rs.next()){ 
                 p = new Paciente(cpf, rs.getString("nome"), 
                                 LocalDate.parse(rs.getString("dataNascimento")));
+                p.setAltura(rs.getDouble("altura"));
+                p.setPeso(rs.getDouble("peso"));
             }
             
         }catch(SQLException ex){
@@ -70,10 +72,10 @@ public class DaoPaciente {
        
         try{
              ps = conn.prepareStatement("UPDATE tb_paciente SET altura = ?, " 
-                                      + "peso = ?, "
-                                      + "endereco = ?, "
-                                      + "telefone = ?, "
-                                      + "WHERE cpf = ?;");
+                                      + " peso = ?,"
+                                      + " endereco = ?"
+                                      + " telefone = ?"
+                                      + " WHERE cpf = ?");
              
             ps.setDouble(1, paciente.getAltura());
             ps.setDouble(2, paciente.getPeso());
@@ -91,7 +93,7 @@ public class DaoPaciente {
     public void excluir(Paciente paciente){
         PreparedStatement ps = null;
         try {
-            ps = conn.prepareStatement("DELETE FROM tb_paciente WHERE cpf = ?;");
+            ps = conn.prepareStatement("DELETE FROM tb_paciente WHERE cpf = ?");
             ps.setString(1, paciente.getCpf());
             ps.execute();
         } catch(SQLException ex) {

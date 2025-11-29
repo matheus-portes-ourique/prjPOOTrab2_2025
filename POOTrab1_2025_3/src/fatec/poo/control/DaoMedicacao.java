@@ -58,7 +58,7 @@ public class DaoMedicacao {
           if(rs.next()) {
               String procedure = "";
               ps = conn.prepareStatement(procedure);
-              medicacao = new Medicacao();
+              medicacao = new Medicacao(rs.getString("nome"));
           }
        } catch (Exception e) {
        }

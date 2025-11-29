@@ -23,7 +23,7 @@ public class DaoMedico {
         PreparedStatement ps = null;
         
         try{
-            ps = conn.prepareStatement("INSERT INTO tb_medico VALUES (?,?,?,?,?,?);");
+            ps = conn.prepareStatement("INSERT INTO tb_medico VALUES(?,?,?,?,?,?)");
             
             ps.setString(1, medico.getNome());
             ps.setString(2, medico.getCpf());
@@ -44,11 +44,12 @@ public class DaoMedico {
         
         try{
             ps = conn.prepareStatement("UPDATE tb_medico SET endereco = ?,"
-                                                          + "telefone = ?,"
-                                                          + "WHERE cpf = ?;");
+                                                          + " telefone = ?"
+                                                          + " WHERE cpf = ?");
             
             ps.setString(1, medico.getEndereco());
-            ps.setString(1, medico.getTelefone());
+            ps.setString(2, medico.getTelefone());
+            ps.setString(3, medico.getCpf());
             
             ps.execute();
             
@@ -63,13 +64,16 @@ public class DaoMedico {
         PreparedStatement ps = null;
         try{
             ps = conn.prepareStatement("SELECT * FROM tb_medico"
-                                     + "WHERE cpf = ?;");
+                                     + " WHERE cpf = ?");
             ps.setString(1, cpf);
             ResultSet rs = ps.executeQuery();
             if(rs.next()){
                 m = new Medico(cpf, rs.getString("nome"),
                                     rs.getString("crm"), 
                                     rs.getString("especialidade"));
+                m.setEndereco(rs.getString("endereco"));
+                m.setTelefone(rs.getString("telefone"));
+                                    
             }
             
         }catch(SQLException ex){
@@ -83,7 +87,7 @@ public class DaoMedico {
         
         try{
             ps = conn.prepareStatement("DELETE FROM tb_medico"
-                                     + "WHERE cpf = ?;");
+                                     + " WHERE cpf = ?");
             
             ps.setString(1, medico.getCpf());
             ps.execute();
