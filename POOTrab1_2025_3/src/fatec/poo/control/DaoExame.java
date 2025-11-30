@@ -89,9 +89,13 @@ public class DaoExame {
             
             if(rs.next()){
                 e = new Exame(rs.getInt("codigo"), rs.getString("descricao"));
+                e.setData(rs.getString("exa_data"));
+                e.setHorario(rs.getString("exa_hora"));
+                e.setValor(rs.getDouble("valor"));
             }
+            
         }catch(SQLException ex){
-            System.out.println(ex.toString());
+                System.out.println(ex.toString());
         }
         
         return e;
