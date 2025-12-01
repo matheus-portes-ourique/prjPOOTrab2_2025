@@ -13,7 +13,7 @@ public class Consulta {
     private double valor;
     private ArrayList<Exame> exames;
     private Medico medico;
-    private Paciente Paciente;
+    private String cpfPaciente; 
     private ArrayList<Medicacao> medicacoes;
 
     public Consulta(int codigo, String data) {
@@ -32,6 +32,14 @@ public class Consulta {
         medicacoes.add(m);
         //m.setConsulta(this);
     }
+    
+    public String getCpfPaciente() {
+        return cpfPaciente;
+    }
+    
+    public void setCpfPaciente(String cpf) {
+        this.cpfPaciente = cpf;
+    }
 
     public Medico getMedico() {
         return medico;
@@ -41,13 +49,13 @@ public class Consulta {
         this.medico = medico;
     }
 
-    public Paciente getPaciente() {
+    /*public Paciente getPaciente() {
         return Paciente;
-    }
+    }*/
 
-    public void setPaciente(Paciente Paciente) {
+    /*public void setPaciente(Paciente Paciente) {
         this.Paciente = Paciente;
-    }
+    }*/
     
     public double calcValorTotalPagar() {
         double totalPagar = 0.0;

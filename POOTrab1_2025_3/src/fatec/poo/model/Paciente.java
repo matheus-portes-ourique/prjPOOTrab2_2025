@@ -50,8 +50,8 @@ public class Paciente extends Pessoa {
         this.peso = peso;
     }
 
-    public String getDataNascimento() {
-        return dataNascimento.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+    public LocalDate getDataNascimento() {
+        return dataNascimento;
     }
 
     public double getAltura() {
@@ -60,6 +60,5 @@ public class Paciente extends Pessoa {
 
     public double getPeso() {
         return peso;
-    }
-    
+    }  
 }

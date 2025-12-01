@@ -44,12 +44,16 @@ public class DaoMedico {
         
         try{
             ps = conn.prepareStatement("UPDATE tb_medico SET endereco = ?,"
-                                                          + " telefone = ?"
+                                                          + " telefone = ?," 
+                                                          + " nome = ?,"
+                                                          + " especialidade = ?"
                                                           + " WHERE cpf = ?");
             
             ps.setString(1, medico.getEndereco());
             ps.setString(2, medico.getTelefone());
-            ps.setString(3, medico.getCpf());
+            ps.setString(3, medico.getNome());
+            ps.setString(4, medico.getEspecialidade());
+            ps.setString(5, medico.getCpf());
             
             ps.execute();
             

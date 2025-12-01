@@ -22,6 +22,7 @@ public class GuiCadastroPaciente extends javax.swing.JFrame {
     private Conexao conexao = null;
     private Paciente paciente = null;
     private DaoPaciente daoPaciente = null;
+    DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
     /**
      * Creates new form GuiCadastroPaciente
      */
@@ -110,6 +111,11 @@ public class GuiCadastroPaciente extends javax.swing.JFrame {
 
         btnAlterar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/fatec/poo/view/icon/Alterar.png"))); // NOI18N
         btnAlterar.setText("Alterar");
+        btnAlterar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAlterarActionPerformed(evt);
+            }
+        });
 
         btnExcluir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/fatec/poo/view/icon/Eraser.png"))); // NOI18N
         btnExcluir.setText("Excluir");
@@ -230,7 +236,6 @@ public class GuiCadastroPaciente extends javax.swing.JFrame {
 
     private void btnConsultarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConsultarActionPerformed
         // TODO add your handling code here:
-        paciente = null;
         String cpf = formttTextCpf.getText();
         paciente = daoPaciente.consultar(CpfTreater.toFormat(cpf));
         
@@ -241,9 +246,10 @@ public class GuiCadastroPaciente extends javax.swing.JFrame {
             btnExcluir.setEnabled(false);
         }
         else {
+            DateTimeFormatter fmt = DateTimeFormatter.ofPattern("dd/MM/yyyy");
             formttTextCpf.setText(paciente.getCpf());
             txtNome.setText(paciente.getNome());
-            txtDataNascimento.setText(paciente.getDataNascimento());
+            txtDataNascimento.setText(paciente.getDataNascimento().format(fmt));
             txtAltura.setText(String.valueOf(paciente.getAltura()));
             txtPeso.setText(String.valueOf(paciente.getPeso()));
             txtEndereco.setText(paciente.getEndereco());
@@ -262,7 +268,7 @@ public class GuiCadastroPaciente extends javax.swing.JFrame {
 
     private void btnInserirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnInserirActionPerformed
         // TODO add your handling code here:
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        
         Double altura = Double.valueOf(txtAltura.getText());
         Double peso = Double.valueOf(txtPeso.getText());
         LocalDate dataNasc = LocalDate.parse(txtDataNascimento.getText(), dtf);
@@ -326,6 +332,32 @@ public class GuiCadastroPaciente extends javax.swing.JFrame {
         txtPeso.setText("");
  
     }//GEN-LAST:event_btnExcluirActionPerformed
+
+    private void btnAlterarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAlterarActionPerformed
+        // TODO add your handling code here:
+        if (JOptionPane.showConfirmDialog(null, "Confirma Alteração?")== 0) {
+           LocalDate dataNasc = LocalDate.parse(txtDataNascimento.getText(), dtf);
+           paciente = new Paciente(formttTextCpf.getText(),txtNome.getText(),dataNasc);
+           paciente.setEndereco(txtEndereco.getText());
+           paciente.setTelefone(txtTelefone.getText());
+           paciente.setAltura(Double.valueOf(txtAltura.getText()));
+           paciente.setPeso(Double.valueOf(txtPeso.getText()));
+           daoPaciente.alterar(paciente);
+        }
+        
+        btnConsultar.setEnabled(true);
+        btnInserir.setEnabled(true);
+        btnAlterar.setEnabled(false);
+        btnExcluir.setEnabled(false);
+        
+        formttTextCpf.setText("");
+        txtNome.setText("");
+        txtEndereco.setText("");
+        txtTelefone.setText("");
+        txtAltura.setText("");
+        txtPeso.setText("");
+        txtDataNascimento.setText("");
+    }//GEN-LAST:event_btnAlterarActionPerformed
 
     /**
      * @param args the command line arguments

@@ -54,6 +54,11 @@ public class GuiMenu extends javax.swing.JFrame {
 
         jMenuItemPaciente.setText("Paciente");
         jMenuItemPaciente.setName("jMenuItemPaciente"); // NOI18N
+        jMenuItemPaciente.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItemPacienteActionPerformed(evt);
+            }
+        });
         jMenuItemCadastro.add(jMenuItemPaciente);
 
         jMenuItemSair.setText("Sair");
@@ -66,6 +71,11 @@ public class GuiMenu extends javax.swing.JFrame {
         jMenuItemRegistro.setName("jMenuItemRegistro"); // NOI18N
 
         jMenuItemMarcarConsulta.setText("Marcar Consulta");
+        jMenuItemMarcarConsulta.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItemMarcarConsultaActionPerformed(evt);
+            }
+        });
         jMenuItemRegistro.add(jMenuItemMarcarConsulta);
 
         jMenuItemMarcarExame.setText("Marcar Exame");
@@ -99,6 +109,20 @@ public class GuiMenu extends javax.swing.JFrame {
         guiMedico.setVisible(true);
         
     }//GEN-LAST:event_jMenuItemMédicoActionPerformed
+
+    private void jMenuItemPacienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemPacienteActionPerformed
+        // TODO add your handling code here:
+        GuiCadastroPaciente guiPaciente = new GuiCadastroPaciente();
+        guiPaciente.setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        guiPaciente.setVisible(true);
+    }//GEN-LAST:event_jMenuItemPacienteActionPerformed
+
+    private void jMenuItemMarcarConsultaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemMarcarConsultaActionPerformed
+        // TODO add your handling code here:
+        GuiMarcarConsulta guiConsulta = new GuiMarcarConsulta();
+        guiConsulta.setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        guiConsulta.setVisible(true);
+    }//GEN-LAST:event_jMenuItemMarcarConsultaActionPerformed
 
     /**
      * @param args the command line arguments

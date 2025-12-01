@@ -17,6 +17,7 @@ import java.time.format.DateTimeFormatter;
 public class DaoPaciente {
     
     private Connection conn;
+    DateTimeFormatter formatoBr = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
     public DaoPaciente(Connection conn) {
         this.conn = conn;
@@ -30,7 +31,7 @@ public class DaoPaciente {
             ps.setString(2, paciente.getCpf());
             ps.setString(3, paciente.getEndereco());
             ps.setString(4, paciente.getTelefone());
-            ps.setString(5, paciente.getDataNascimento());
+            ps.setString(5, paciente.getDataNascimento().format(formatoBr));
             ps.setDouble(6, paciente.getAltura());
             ps.setDouble(7, paciente.getPeso());
             
@@ -51,8 +52,10 @@ public class DaoPaciente {
             ps.setString(1, cpf);
             ResultSet rs = ps.executeQuery(); 
             if(rs.next()){ 
-                p = new Paciente(cpf, rs.getString("nome"), 
-                                LocalDate.parse(rs.getString("dataNascimento")));
+                java.sql.Date dataSql = rs.getDate("dataNascimento");
+                LocalDate dataNasc = dataSql.toLocalDate();
+                
+                p = new Paciente(cpf, rs.getString("nome"), dataNasc);
                 p.setAltura(rs.getDouble("altura"));
                 p.setPeso(rs.getDouble("peso"));
             }
@@ -60,7 +63,6 @@ public class DaoPaciente {
         }catch(SQLException ex){
             System.out.println(ex.toString());
         }
-        
         return p;
     }
     
