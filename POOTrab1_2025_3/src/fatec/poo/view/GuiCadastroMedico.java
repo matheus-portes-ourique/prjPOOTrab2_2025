@@ -8,7 +8,7 @@ package fatec.poo.view;
 import fatec.poo.control.DaoMedico;
 import fatec.poo.model.Medico;
 import fatec.poo.control.Conexao;
-import fatec.poo.utility.CpfTreater;
+import fatec.poo.util.CpfTreater;
 import javax.swing.JOptionPane;
 
 /**
@@ -235,19 +235,20 @@ public class GuiCadastroMedico extends javax.swing.JFrame {
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
         // CONEXAO ESTABELECIDA ASSIM QUE A JANELA 'MEDICO' FOR ABERTA
         //TEM QUE MUDAR OS DADOS CONFORME AS CONFIGURAÇÕES DO SEU BANCO DE DADOS
-        conexao = new Conexao("<user>","<password>");
+        conexao = new Conexao("system","16071995");
         conexao.setDriver("oracle.jdbc.driver.OracleDriver");
-        conexao.setConnectionString("jdbc:oracle:thin:@<host>:<porta>:xe");
+        conexao.setConnectionString("jdbc:oracle:thin:@localhost:1521:xe");
         daoMedico = new DaoMedico(conexao.conectar());
     }//GEN-LAST:event_formWindowOpened
 
     private void btnInserirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnInserirActionPerformed
         String cpf = CpfTreater.toFormat(txtCPF.getText());
         
-        if(CpfTreater.toValidate(cpf)) {
-        Medico medico = new Medico(cpf, txtNome.getText(), txtCRM.getText(), txtEspecialidade.getText());
-        medico.setEndereco(txtEndereco.getText());
-        medico.setTelefone(txtTelefone.getText());
+        if(CpfTreater.isValid(cpf)) {
+            Medico medico = new Medico(cpf, txtNome.getText(), txtCRM.getText(), txtEspecialidade.getText());
+            medico.setEndereco(txtEndereco.getText());
+            medico.setTelefone(txtTelefone.getText());
+            
             if(daoMedico.consultar(medico.getCpf()) == null) {
                 daoMedico.inserir(medico);
                 
@@ -269,16 +270,16 @@ public class GuiCadastroMedico extends javax.swing.JFrame {
                 btnExcluir.setEnabled(false);
             }
             else {
-                txtCPF.setText("CPF já cadastrado!");
+                JOptionPane.showMessageDialog(this, "Erro: Este CPF já está cadastrado!", "Aviso", JOptionPane.WARNING_MESSAGE);
                 btnConsultar.setEnabled(true);
                 btnInserir.setEnabled(true);
                 btnAlterar.setEnabled(true);
                 btnExcluir.setEnabled(false); 
             }
-        
         }
         else {
-            txtCPF.setText("CPF inválido!");
+            JOptionPane.showMessageDialog(this, "CPF Inválido! Verifique os dígitos.", "Erro de Validação", JOptionPane.ERROR_MESSAGE);
+            txtCPF.requestFocus(); 
         }
     }//GEN-LAST:event_btnInserirActionPerformed
 

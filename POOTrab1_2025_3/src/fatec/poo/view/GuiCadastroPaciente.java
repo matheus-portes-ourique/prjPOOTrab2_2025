@@ -1,4 +1,4 @@
-    /*
+/*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
@@ -8,10 +8,9 @@ package fatec.poo.view;
 import fatec.poo.control.Conexao;
 import fatec.poo.control.DaoPaciente;
 import fatec.poo.model.Paciente;
-import fatec.poo.utility.CpfTreater;
+import fatec.poo.util.CpfTreater;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.HashSet;
 import javax.swing.JOptionPane;
 
 /**
@@ -233,9 +232,7 @@ public class GuiCadastroPaciente extends javax.swing.JFrame {
         // TODO add your handling code here:
         paciente = null;
         String cpf = formttTextCpf.getText();
-        cpf = cpf.replace("-", "");
-        cpf = cpf.replace(".", "");
-        paciente = daoPaciente.consultar(cpf);
+        paciente = daoPaciente.consultar(CpfTreater.toFormat(cpf));
         
         if(paciente == null) {
             btnConsultar.setEnabled(false);
@@ -272,36 +269,43 @@ public class GuiCadastroPaciente extends javax.swing.JFrame {
         
         String cpf = CpfTreater.toFormat(formttTextCpf.getText());
         //TODO: VERIFICAR SE O CPF EH VALIDO PARA CADASTRO
-        
+        if(CpfTreater.isValid(cpf)) {
         //CADASTRO DE PACIENTE DE FATOÓ
-        paciente = new Paciente(cpf, txtNome.getText(), dataNasc);
-        paciente.setEndereco(txtEndereco.getText());
-        paciente.setTelefone(txtTelefone.getText());
-        paciente.setAltura(altura);
-        paciente.setPeso(peso);
-        daoPaciente.inserir(paciente);
-        
-        //LIMPANDO OS CAMPOS APOS CADASTRO DE PACIENTE
-        formttTextCpf.setText("");
-        txtAltura.setText("");
-        txtPeso.setText("");
-        txtDataNascimento.setText("");
-        txtNome.setText("");
-        txtEndereco.setText("");
-        txtTelefone.setText("");
-        
-        formttTextCpf.setEnabled(true);
-        txtAltura.setEnabled(false);
-        txtPeso.setEnabled(false);
-        txtDataNascimento.setEnabled(false);
-        txtEndereco.setEnabled(false);
-        txtTelefone.setEnabled(false);
-       
-        //SETTANDO ESTADO DOS BOTOES
-        btnConsultar.setEnabled(true);
-        btnInserir.setEnabled(false);
-        btnAlterar.setEnabled(false);
-        btnExcluir.setEnabled(false); 
+            paciente = new Paciente(cpf, txtNome.getText(), dataNasc);
+            paciente.setEndereco(txtEndereco.getText());
+            paciente.setTelefone(txtTelefone.getText());
+            paciente.setAltura(altura);
+            paciente.setPeso(peso);
+            if(daoPaciente.consultar(cpf) == null) {
+                daoPaciente.inserir(paciente);
+                formttTextCpf.setText("");
+                txtAltura.setText("");
+                txtPeso.setText("");
+                txtDataNascimento.setText("");
+                txtNome.setText("");
+                txtEndereco.setText("");
+                txtTelefone.setText("");
+                
+                formttTextCpf.setEnabled(true);
+                txtAltura.setEnabled(false);
+                txtPeso.setEnabled(false);
+                txtDataNascimento.setEnabled(false);
+                txtEndereco.setEnabled(false);
+                txtTelefone.setEnabled(false);
+                
+                btnConsultar.setEnabled(true);
+                btnInserir.setEnabled(false);
+                btnAlterar.setEnabled(false);
+                btnExcluir.setEnabled(false);
+            }
+            else {
+                JOptionPane.showMessageDialog(this, "Erro: Este CPF já está cadastrado!", "Aviso", JOptionPane.WARNING_MESSAGE);
+            }
+        }
+        else {
+            JOptionPane.showMessageDialog(this, "CPF Inválido! Verifique os dígitos.", "Erro de Validação", JOptionPane.ERROR_MESSAGE);
+            formttTextCpf.requestFocus();
+        }
     }//GEN-LAST:event_btnInserirActionPerformed
 
     private void btnExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExcluirActionPerformed
