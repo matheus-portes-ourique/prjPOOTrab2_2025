@@ -24,11 +24,14 @@ create table tb_consulta (
     med_cpf varchar2(14)
 );
 
-create table tb_medicacao (
-    nome varchar2(10),
-    dosagem varchar2(10),
-    qtdDias number,
-    cons_codigo number
+CREATE TABLE tb_medicacao (
+    nome VARCHAR2(50),
+    dosagem VARCHAR2(20),
+    qtdDias NUMBER,
+    consulta_codigo NUMBER NOT NULL,
+
+    CONSTRAINT pk_medicacao PRIMARY KEY (nome, consulta_codigo),
+    CONSTRAINT fk_med_cons FOREIGN KEY (consulta_codigo) REFERENCES tb_consulta(codigo)
 );
 
 create table tb_exame (
@@ -65,10 +68,6 @@ references tb_medico (cpf);
 alter table tb_consulta
 add constraint fk_paciente_consulta foreign key (pac_cpf)
 references tb_paciente (cpf);
-
-alter table tb_medicacao 
-add constraint fk_medicacao_consulta foreign key (cons_codigo)
-references tb_consulta(codigo);
 
 --procedure busca nome medico por nome da medicacao0
 --TODO: CRIAR PROCEDURE

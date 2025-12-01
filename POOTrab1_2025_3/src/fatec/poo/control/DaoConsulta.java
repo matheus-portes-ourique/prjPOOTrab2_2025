@@ -68,7 +68,7 @@ public class DaoConsulta {
     
        try {
         String sql = "SELECT c.codigo, c.cons_data, c.valor, c.pac_cpf, " + 
-                     "       m.cpf AS med_cpf, m.nome AS med_nome " +
+                     "m.cpf AS med_cpf, m.nome AS med_nome " +
                      "FROM tb_consulta c " +
                      "INNER JOIN tb_medico m ON c.med_cpf = m.cpf " +
                      "WHERE c.codigo = ?";

@@ -82,6 +82,11 @@ public class GuiMenu extends javax.swing.JFrame {
         jMenuItemRegistro.add(jMenuItemMarcarExame);
 
         jMenuItemPrescreverMed.setText("Prescrever Medicação");
+        jMenuItemPrescreverMed.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItemPrescreverMedActionPerformed(evt);
+            }
+        });
         jMenuItemRegistro.add(jMenuItemPrescreverMed);
 
         jMenuBar1.add(jMenuItemRegistro);
@@ -123,6 +128,13 @@ public class GuiMenu extends javax.swing.JFrame {
         guiConsulta.setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         guiConsulta.setVisible(true);
     }//GEN-LAST:event_jMenuItemMarcarConsultaActionPerformed
+
+    private void jMenuItemPrescreverMedActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemPrescreverMedActionPerformed
+        // TODO add your handling code here:
+        GuiPrescreverMedicacao guiMedicacao = new GuiPrescreverMedicacao();
+        guiMedicacao.setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        guiMedicacao.setVisible(true);
+    }//GEN-LAST:event_jMenuItemPrescreverMedActionPerformed
 
     /**
      * @param args the command line arguments
