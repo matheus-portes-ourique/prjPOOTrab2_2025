@@ -19,9 +19,10 @@ create table tb_paciente (
 
 create table tb_consulta (
     codigo NUMBER,
-    cons_data date,
+    cons_data varchar2(10),
     valor decimal(6,2),
-    med_cpf varchar2(14)
+    med_cpf varchar2(14),
+    pac_cpf varchar2(14)
 );
 
 CREATE TABLE tb_medicacao (
