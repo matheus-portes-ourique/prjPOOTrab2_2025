@@ -1,3 +1,4 @@
+----tabelas------------
 create table tb_medico (
     nome varchar2(30),
     cpf varchar2(14),
@@ -30,20 +31,18 @@ CREATE TABLE tb_medicacao (
     dosagem VARCHAR2(20),
     qtdDias NUMBER,
     consulta_codigo NUMBER NOT NULL,
-
-    CONSTRAINT pk_medicacao PRIMARY KEY (nome, consulta_codigo),
-    CONSTRAINT fk_med_cons FOREIGN KEY (consulta_codigo) REFERENCES tb_consulta(codigo)
 );
 
-create table tb_exame (
-    codigo number,
-    descricao varchar2(30),
-    exa_data varchar2(20),
-    exa_hora varchar2(5),
-    valor decimal(6,2)
+CREATE TABLE tb_exame (
+    codigo NUMBER(5) NOT NULL,
+    descricao VARCHAR2(50),
+    exa_data VARCHAR2(10),       
+    exa_hora VARCHAR2(5),        
+    valor NUMBER(8,2),
+    consulta_codigo NUMBER(5) NOT NULL, 
 );
 
---constraints (PKs)--
+-----constraints (PKs)-----------
 
 alter table tb_medico
 add constraint pk_med_cpf primary key(cpf);
@@ -52,7 +51,7 @@ alter table tb_paciente
 add CONSTRAINT pk_pac_cpf primary key(cpf);
 
 alter table tb_medicacao
-add constraint pk_nome primary key (nome);
+add constraint pk_medicacao primary key (nome, consulta_codigo);
 
 alter table tb_exame
 add constraint pk_exa_codigo primary key(codigo);
@@ -60,7 +59,7 @@ add constraint pk_exa_codigo primary key(codigo);
 alter table tb_consulta
 add constraint pk_cons_codigo primary key(codigo);
 
---constraints (FKs)--
+------constraints (FKs)-----------
 
 alter table tb_consulta
 add constraint fk_medico_consulta foreign key (med_cpf) 
@@ -70,12 +69,10 @@ alter table tb_consulta
 add constraint fk_paciente_consulta foreign key (pac_cpf)
 references tb_paciente (cpf);
 
---procedure busca nome medico por nome da medicacao0
---TODO: CRIAR PROCEDURE
-select m.nome 
-from tb_medico m 
-inner join tb_consulta c
-on c.med_cpf = m.cpf
-inner join TB_MEDICACAO md
-on md.cons_codigo = c.CODIGO
-where md.nome = 'dipirona';
+alter table tb_exame
+add CONSTRAINT fk_exame_consulta FOREIGN KEY (consulta_codigo) 
+REFERENCES tb_consulta(codigo)
+
+alter table tb_medicacao
+add CONSTRAINT fk_med_cons FOREIGN KEY (consulta_codigo) 
+REFERENCES tb_consulta(codigo)

@@ -7,6 +7,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 
 import fatec.poo.model.Paciente;
+import java.sql.Date;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
@@ -52,8 +53,9 @@ public class DaoPaciente {
             ps.setString(1, cpf);
             ResultSet rs = ps.executeQuery(); 
             if(rs.next()){ 
-                java.sql.Date dataSql = rs.getDate("dataNascimento");
+                Date dataSql = rs.getDate("dataNascimento");
                 LocalDate dataNasc = dataSql.toLocalDate();
+                System.out.println(dataNasc);
                 
                 p = new Paciente(cpf, rs.getString("nome"), dataNasc);
                 p.setAltura(rs.getDouble("altura"));

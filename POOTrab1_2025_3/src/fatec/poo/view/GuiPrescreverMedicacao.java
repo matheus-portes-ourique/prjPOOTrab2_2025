@@ -98,6 +98,11 @@ public class GuiPrescreverMedicacao extends javax.swing.JFrame {
 
         btnConsultar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/fatec/poo/view/icon/pesq.png"))); // NOI18N
         btnConsultar.setText("Consultar");
+        btnConsultar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnConsultarActionPerformed(evt);
+            }
+        });
 
         btnInserir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/fatec/poo/view/icon/add.png"))); // NOI18N
         btnInserir.setText("Inserir");
@@ -117,9 +122,19 @@ public class GuiPrescreverMedicacao extends javax.swing.JFrame {
 
         btnExcluir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/fatec/poo/view/icon/Eraser.png"))); // NOI18N
         btnExcluir.setText("Excluir");
+        btnExcluir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnExcluirActionPerformed(evt);
+            }
+        });
 
         btnSair.setIcon(new javax.swing.ImageIcon(getClass().getResource("/fatec/poo/view/icon/exit.png"))); // NOI18N
         btnSair.setText("Sair");
+        btnSair.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSairActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -202,109 +217,112 @@ public class GuiPrescreverMedicacao extends javax.swing.JFrame {
 
     private void btnInserirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnInserirActionPerformed
         // TODO add your handling code here:
+        try {
+        
         medicacao = new Medicacao(txtNome.getText());
         medicacao.setDosagem(txtDosagem.getText());
         medicacao.setQtdeDias(Integer.parseInt(txtQtdDias.getText()));
         
+       
         consulta.addMedicacao(medicacao);
        
+        
         daoMedicacao.inserir(medicacao, codigoConsultaAtual);
         
         JOptionPane.showMessageDialog(this, "Medicação prescrita com sucesso!");
-        //limparTela();
+        
+        limparTela();
+        
+    } catch (NumberFormatException e) {
+        JOptionPane.showMessageDialog(this, "A quantidade de dias deve ser um número válido.");
+        txtQtdDias.requestFocus();
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(this, "Erro ao inserir: " + e.getMessage());
+    }
     }//GEN-LAST:event_btnInserirActionPerformed
 
     private void btnPesqConsultaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPesqConsultaActionPerformed
         // TODO add your handling code here:
-         try {
-            codigoConsultaAtual = Integer.parseInt(txtCodigoConsulta.getText());
-        } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(this, "Código inválido");
-            return;
-        }
-        
-        consulta = daoConsulta.consultar(codigoConsultaAtual);
-        
-        if (consulta == null) {
-            JOptionPane.showMessageDialog(this, "Consulta não cadastrada");
-            txtCodigoConsulta.requestFocus();
-            return;
-        }
-        
-        lblNomeMedico.setText(consulta.getMedico().getNome());
-        txtCodigoConsulta.setEnabled(false);
-        //String nomeMedicacao = txtNome.getText();
-        //medicacao = daoMedicacao.consultar(nomeMedicacao, codigoConsultaAtual);
-        
-        
-        /*if (medicacao == null) {
-            txtCodigoConsulta.setEnabled(false);
-            btnPesqConsulta.setEnabled(false);
-            txtDosagem.setEnabled(true);
-            txtQtdDias.setEnabled(true);
-            txtDosagem.setText("");
-            txtQtdDias.setText("");
-            btnInserir.setEnabled(true); 
-            txtDosagem.requestFocus();
-            
-        } else {
-            txtDosagem.setText(medicacao.getDosagem());
-            txtQtdDias.setText(String.valueOf(medicacao.getQtdeDias()));
-            txtDosagem.setEnabled(true);
-            txtQtdDias.setEnabled(true);
-            btnAlterar.setEnabled(true);
-            btnExcluir.setEnabled(true);
-            btnInserir.setEnabled(false);
-        }*/
+        try {
+        codigoConsultaAtual = Integer.parseInt(txtCodigoConsulta.getText());
+    } catch (NumberFormatException e) {
+        JOptionPane.showMessageDialog(this, "Código inválido");
+        return;
+    }
+
+    consulta = daoConsulta.consultar(codigoConsultaAtual);
+
+    if (consulta == null) {
+        JOptionPane.showMessageDialog(this, "Consulta não cadastrada");
+        txtCodigoConsulta.requestFocus();
+        return;
+    }
+    
+     medicacao = daoMedicacao.consultar(txtNome.getText(), codigoConsultaAtual);
+
+    lblNomeMedico.setText(consulta.getMedico().getNome());
+    
+    if(medicacao != null) {
+            JOptionPane.showMessageDialog(this, "A medicaçao já está prescrita para esta consulta.\n" 
+                                                + "Clique em 'Consultar' para visualizar informações; ");
+    }
+
+    txtCodigoConsulta.setEnabled(false);
+    btnPesqConsulta.setEnabled(false);
+    btnConsultar.setEnabled(true);
+    btnConsultar.requestFocus(); 
     }//GEN-LAST:event_btnPesqConsultaActionPerformed
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
         // TODO add your handling code here:
-        conexao = new Conexao("system", "16071995");
+        conexao = new Conexao("", "");
         conexao.setDriver("oracle.jdbc.driver.OracleDriver");
         conexao.setConnectionString("jdbc:oracle:thin:@localhost:1521:xe");
         daoMedicacao = new DaoMedicacao(conexao.conectar());
         daoConsulta = new DaoConsulta(conexao.conectar());
         daoMedico = new DaoMedico(conexao.conectar());
         
-        btnConsultar.setEnabled(false);
-        btnInserir.setEnabled(false);
-        btnAlterar.setEnabled(false);
-        btnExcluir.setEnabled(false);
-        
-        txtCodigoConsulta.setEnabled(false);
-        txtDosagem.setEnabled(false);
-        txtNome.setEnabled(true);
-        txtQtdDias.setEnabled(false);
-        
-        lblNomeMedico.setEnabled(false);
-        btnPesqConsulta.setEnabled(false);
+        limparTela();
     }//GEN-LAST:event_formWindowOpened
 
     private void btnAlterarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAlterarActionPerformed
-        // TODO add your handling code here:
+
+         if (JOptionPane.showConfirmDialog(this, "Confirma alteração?") == 0) {
+        try {
+            medicacao.setDosagem(txtDosagem.getText());
+            medicacao.setQtdeDias(Integer.parseInt(txtQtdDias.getText()));
+            daoMedicacao.alterar(medicacao, codigoConsultaAtual);
+            
+            JOptionPane.showMessageDialog(this, "Alteração realizada com sucesso!");
+            
+            limparTela();
+            
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "Quantidade de dias inválida.");
+        }
+    }
     }//GEN-LAST:event_btnAlterarActionPerformed
 
     private void txtNomeFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtNomeFocusLost
         // TODO add your handling code here:
         String nome = txtNome.getText().trim();
         if (!nome.isEmpty()) {
-        // --- CAMPO PREENCHIDO: Libera a próxima etapa ---
+        
         
             txtCodigoConsulta.setEnabled(true);
             btnPesqConsulta.setEnabled(true);
         
-        // (Opcional) Já habilita o botão de Consultar se você quiser mantê-lo
+        
             btnConsultar.setEnabled(true); 
         
         } else {
-        // --- CAMPO VAZIO: Trava a próxima etapa (caso o usuário apague o texto) ---
+        
         
             txtCodigoConsulta.setEnabled(false);
             btnPesqConsulta.setEnabled(false);
-            txtCodigoConsulta.setText(""); // Limpa o código se o nome foi apagado
+            txtCodigoConsulta.setText("");
         
-        // Trava o resto da tela por segurança
+    
             txtDosagem.setEnabled(false);
             txtQtdDias.setEnabled(false);
             btnConsultar.setEnabled(false);
@@ -314,6 +332,80 @@ public class GuiPrescreverMedicacao extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_txtNomeFocusLost
 
+    private void btnExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExcluirActionPerformed
+        // TODO add your handling code here:
+        if (JOptionPane.showConfirmDialog(this, "Confirma exclusão?") == 0) {
+        daoMedicacao.excluir(medicacao, codigoConsultaAtual);
+        JOptionPane.showMessageDialog(this, "Exclusão realizada com sucesso!");
+        limparTela();
+    }
+    }//GEN-LAST:event_btnExcluirActionPerformed
+
+    private void btnConsultarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConsultarActionPerformed
+        // TODO add your handling code here:
+         if (txtNome.getText().trim().isEmpty()) {
+        JOptionPane.showMessageDialog(this, "Digite o nome da medicação.");
+        return;
+    }
+
+    String nomeMedicacao = txtNome.getText();
+    medicacao = daoMedicacao.consultar(nomeMedicacao, codigoConsultaAtual);
+    txtDosagem.setEnabled(true);
+    txtQtdDias.setEnabled(true);
+
+    if (medicacao == null) {
+        
+        txtDosagem.setText("");
+        txtQtdDias.setText("");
+        
+        btnInserir.setEnabled(true);
+        btnAlterar.setEnabled(false);
+        btnExcluir.setEnabled(false);
+        
+       
+        txtDosagem.requestFocus();
+        
+    } else {
+        txtDosagem.setText(medicacao.getDosagem());
+        txtQtdDias.setText(String.valueOf(medicacao.getQtdeDias()));
+        
+        btnInserir.setEnabled(false);
+        btnAlterar.setEnabled(true);
+        btnExcluir.setEnabled(true);
+    }
+
+    btnConsultar.setEnabled(false);
+    }//GEN-LAST:event_btnConsultarActionPerformed
+
+    private void btnSairActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSairActionPerformed
+        // TODO add your handling code here:
+        this.dispose();
+    }//GEN-LAST:event_btnSairActionPerformed
+
+    private void limparTela() {
+    txtNome.setText("");
+    txtCodigoConsulta.setText("");
+    lblNomeMedico.setText("");
+    txtDosagem.setText("");
+    txtQtdDias.setText("");
+    
+    txtNome.setEnabled(true);
+    txtNome.requestFocus();
+    
+    txtCodigoConsulta.setEnabled(false);
+    btnPesqConsulta.setEnabled(false);
+    
+    txtDosagem.setEnabled(false);
+    txtQtdDias.setEnabled(false);
+
+    btnConsultar.setEnabled(false); 
+    btnInserir.setEnabled(false);
+    btnAlterar.setEnabled(false);
+    btnExcluir.setEnabled(false);
+
+    medicacao = null;
+    consulta = null;
+}
     /**
      * @param args the command line arguments
      */

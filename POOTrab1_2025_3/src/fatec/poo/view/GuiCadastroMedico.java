@@ -8,7 +8,7 @@ package fatec.poo.view;
 import fatec.poo.control.DaoMedico;
 import fatec.poo.model.Medico;
 import fatec.poo.control.Conexao;
-import fatec.poo.util.CpfTreater;
+import fatec.poo.model.Pessoa;
 import javax.swing.JOptionPane;
 
 /**
@@ -41,7 +41,6 @@ public class GuiCadastroMedico extends javax.swing.JFrame {
         lblEndereço = new javax.swing.JLabel();
         lblTelefone = new javax.swing.JLabel();
         lblCRM = new javax.swing.JLabel();
-        txtCPF = new javax.swing.JTextField();
         txtNome = new javax.swing.JTextField();
         txtEndereco = new javax.swing.JTextField();
         txtTelefone = new javax.swing.JTextField();
@@ -53,6 +52,7 @@ public class GuiCadastroMedico extends javax.swing.JFrame {
         btnAlterar = new javax.swing.JButton();
         btnExcluir = new javax.swing.JButton();
         btnSair = new javax.swing.JButton();
+        txtCPF = new javax.swing.JFormattedTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Cadastro Médico");
@@ -114,6 +114,17 @@ public class GuiCadastroMedico extends javax.swing.JFrame {
 
         btnSair.setIcon(new javax.swing.ImageIcon(getClass().getResource("/fatec/poo/view/icon/exit.png"))); // NOI18N
         btnSair.setText("Sair");
+        btnSair.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSairActionPerformed(evt);
+            }
+        });
+
+        try {
+            txtCPF.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("###.###.###-##")));
+        } catch (java.text.ParseException ex) {
+            ex.printStackTrace();
+        }
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -146,8 +157,8 @@ public class GuiCadastroMedico extends javax.swing.JFrame {
                             .addComponent(lblCPF))
                         .addGap(28, 28, 28)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txtCPF, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtNome, javax.swing.GroupLayout.PREFERRED_SIZE, 441, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(txtNome, javax.swing.GroupLayout.PREFERRED_SIZE, 441, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtCPF, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addContainerGap(43, Short.MAX_VALUE))
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -208,7 +219,7 @@ public class GuiCadastroMedico extends javax.swing.JFrame {
     private void btnConsultarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConsultarActionPerformed
         // IMPLEMENTADA FUNCIONALIDADE DE CONSULTA PARA GUI MEDICO
         medico = null;
-        String cpf = CpfTreater.toFormat(txtCPF.getText());
+        String cpf = Pessoa.toFormat(txtCPF.getText());
         medico = daoMedico.consultar(cpf);
         
         if (medico == null){
@@ -235,16 +246,16 @@ public class GuiCadastroMedico extends javax.swing.JFrame {
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
         // CONEXAO ESTABELECIDA ASSIM QUE A JANELA 'MEDICO' FOR ABERTA
         //TEM QUE MUDAR OS DADOS CONFORME AS CONFIGURAÇÕES DO SEU BANCO DE DADOS
-        conexao = new Conexao("system","16071995");
+        conexao = new Conexao("","");
         conexao.setDriver("oracle.jdbc.driver.OracleDriver");
         conexao.setConnectionString("jdbc:oracle:thin:@localhost:1521:xe");
         daoMedico = new DaoMedico(conexao.conectar());
     }//GEN-LAST:event_formWindowOpened
 
     private void btnInserirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnInserirActionPerformed
-        String cpf = CpfTreater.toFormat(txtCPF.getText());
+        String cpf = Pessoa.toFormat(txtCPF.getText());
         
-        if(CpfTreater.isValid(cpf)) {
+        if(Pessoa.isValid(cpf)) {
             Medico medico = new Medico(cpf, txtNome.getText(), txtCRM.getText(), txtEspecialidade.getText());
             medico.setEndereco(txtEndereco.getText());
             medico.setTelefone(txtTelefone.getText());
@@ -323,6 +334,11 @@ public class GuiCadastroMedico extends javax.swing.JFrame {
         txtEspecialidade.setText("");
     }//GEN-LAST:event_btnAlterarActionPerformed
 
+    private void btnSairActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSairActionPerformed
+        // TODO add your handling code here:
+        this.dispose();
+    }//GEN-LAST:event_btnSairActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -370,7 +386,7 @@ public class GuiCadastroMedico extends javax.swing.JFrame {
     private javax.swing.JLabel lblEspecialidade;
     private javax.swing.JLabel lblNome;
     private javax.swing.JLabel lblTelefone;
-    private javax.swing.JTextField txtCPF;
+    private javax.swing.JFormattedTextField txtCPF;
     private javax.swing.JTextField txtCRM;
     private javax.swing.JTextField txtEndereco;
     private javax.swing.JTextField txtEspecialidade;

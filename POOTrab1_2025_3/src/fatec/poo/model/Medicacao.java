@@ -9,19 +9,10 @@ public class Medicacao {
     private String dosagem;
     private int qtdeDias;
     private int codConsulta;
-    //private Consulta consulta;
     
     public Medicacao(String nome) {
         this.nome = nome;
     }
-    
-    /*public Consulta getConsulta() {
-        return consulta;
-    }*/
-
-    /*(public void setConsulta(Consulta consulta) {
-        this.consulta = consulta;
-    }*/
     
     public int getCodConsulta(){
         return codConsulta;
