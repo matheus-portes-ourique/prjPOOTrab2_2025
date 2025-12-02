@@ -83,6 +83,11 @@ public class GuiPrescreverMedicacao extends javax.swing.JFrame {
 
         lblCodigoConsulta.setText("Código Consulta");
 
+        txtNome.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtNomeFocusLost(evt);
+            }
+        });
         txtNome.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtNomeActionPerformed(evt);
@@ -104,6 +109,11 @@ public class GuiPrescreverMedicacao extends javax.swing.JFrame {
 
         btnAlterar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/fatec/poo/view/icon/Alterar.png"))); // NOI18N
         btnAlterar.setText("Alterar");
+        btnAlterar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAlterarActionPerformed(evt);
+            }
+        });
 
         btnExcluir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/fatec/poo/view/icon/Eraser.png"))); // NOI18N
         btnExcluir.setText("Excluir");
@@ -196,9 +206,7 @@ public class GuiPrescreverMedicacao extends javax.swing.JFrame {
         medicacao.setDosagem(txtDosagem.getText());
         medicacao.setQtdeDias(Integer.parseInt(txtQtdDias.getText()));
         
-    
         consulta.addMedicacao(medicacao);
-        
        
         daoMedicacao.inserir(medicacao, codigoConsultaAtual);
         
@@ -223,44 +231,31 @@ public class GuiPrescreverMedicacao extends javax.swing.JFrame {
             return;
         }
         
+        lblNomeMedico.setText(consulta.getMedico().getNome());
+        txtCodigoConsulta.setEnabled(false);
+        //String nomeMedicacao = txtNome.getText();
+        //medicacao = daoMedicacao.consultar(nomeMedicacao, codigoConsultaAtual);
         
-        lblNomeMedico.setText(consulta.getMedico().getNome()); 
         
-        
-        String nomeMedicacao = txtNome.getText();
-        medicacao = daoMedicacao.consultar(nomeMedicacao, codigoConsultaAtual);
-        
-        if (medicacao == null) {
-           
-            
-            
+        /*if (medicacao == null) {
             txtCodigoConsulta.setEnabled(false);
             btnPesqConsulta.setEnabled(false);
-            
-            
             txtDosagem.setEnabled(true);
             txtQtdDias.setEnabled(true);
             txtDosagem.setText("");
             txtQtdDias.setText("");
-            
             btnInserir.setEnabled(true); 
             txtDosagem.requestFocus();
             
         } else {
-            
-           
-            
             txtDosagem.setText(medicacao.getDosagem());
             txtQtdDias.setText(String.valueOf(medicacao.getQtdeDias()));
-            
             txtDosagem.setEnabled(true);
             txtQtdDias.setEnabled(true);
-            
-           
             btnAlterar.setEnabled(true);
             btnExcluir.setEnabled(true);
             btnInserir.setEnabled(false);
-        }
+        }*/
     }//GEN-LAST:event_btnPesqConsultaActionPerformed
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
@@ -268,11 +263,56 @@ public class GuiPrescreverMedicacao extends javax.swing.JFrame {
         conexao = new Conexao("system", "16071995");
         conexao.setDriver("oracle.jdbc.driver.OracleDriver");
         conexao.setConnectionString("jdbc:oracle:thin:@localhost:1521:xe");
-        
         daoMedicacao = new DaoMedicacao(conexao.conectar());
         daoConsulta = new DaoConsulta(conexao.conectar());
         daoMedico = new DaoMedico(conexao.conectar());
+        
+        btnConsultar.setEnabled(false);
+        btnInserir.setEnabled(false);
+        btnAlterar.setEnabled(false);
+        btnExcluir.setEnabled(false);
+        
+        txtCodigoConsulta.setEnabled(false);
+        txtDosagem.setEnabled(false);
+        txtNome.setEnabled(true);
+        txtQtdDias.setEnabled(false);
+        
+        lblNomeMedico.setEnabled(false);
+        btnPesqConsulta.setEnabled(false);
     }//GEN-LAST:event_formWindowOpened
+
+    private void btnAlterarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAlterarActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnAlterarActionPerformed
+
+    private void txtNomeFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtNomeFocusLost
+        // TODO add your handling code here:
+        String nome = txtNome.getText().trim();
+        if (!nome.isEmpty()) {
+        // --- CAMPO PREENCHIDO: Libera a próxima etapa ---
+        
+            txtCodigoConsulta.setEnabled(true);
+            btnPesqConsulta.setEnabled(true);
+        
+        // (Opcional) Já habilita o botão de Consultar se você quiser mantê-lo
+            btnConsultar.setEnabled(true); 
+        
+        } else {
+        // --- CAMPO VAZIO: Trava a próxima etapa (caso o usuário apague o texto) ---
+        
+            txtCodigoConsulta.setEnabled(false);
+            btnPesqConsulta.setEnabled(false);
+            txtCodigoConsulta.setText(""); // Limpa o código se o nome foi apagado
+        
+        // Trava o resto da tela por segurança
+            txtDosagem.setEnabled(false);
+            txtQtdDias.setEnabled(false);
+            btnConsultar.setEnabled(false);
+            btnInserir.setEnabled(false);
+            btnAlterar.setEnabled(false);
+            btnExcluir.setEnabled(false);
+        }
+    }//GEN-LAST:event_txtNomeFocusLost
 
     /**
      * @param args the command line arguments

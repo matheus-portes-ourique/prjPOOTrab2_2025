@@ -54,21 +54,26 @@ public class DaoMedicacao {
         }
     }
    
-   public void consultar(String nome) {
+   /*public Medicacao consultar(String nome, int codConsulta) {
        Medicacao medicacao = null;
        PreparedStatement ps = null;
        try {
-          ps = conn.prepareStatement("SELECT * FROM tb_medicacao WHERE nome = ?;");
+          ps = conn.prepareStatement("SELECT * FROM tb_medicacao WHERE nome = ? "
+                                    + "AND consulta_codigo = ?");
           ps.setString(1, nome);
+          ps.setInt(2, codConsulta);
           ResultSet rs = ps.executeQuery();
           if(rs.next()) {
-              String procedure = "";
-              ps = conn.prepareStatement(procedure);
               medicacao = new Medicacao(rs.getString("nome"));
+              medicacao.setDosagem(rs.getString("dosagem"));
+              medicacao.setQtdeDias(rs.getInt("qtdDias"));
+              medicacao.setConsulta(rs.getInt("consulta_codigo"));
           }
-       } catch (Exception e) {
+       } catch (SQLException ex) {
+           System.out.println(ex.toString());
        }  
-   }
+       return medicacao;
+   }*/
    
    public void excluir(Medicacao medicacao, int codigoConsulta) {
         PreparedStatement ps = null;
